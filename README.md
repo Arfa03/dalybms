@@ -1,5 +1,5 @@
 # Daly Smart BMS MQTT sensor for generic application/HA
-**Thanks to @mindFreeze for the great work!**
+## **Thanks to @mindFreeze for the great work!**
 Monitor a Daly Smart BMS through UART USB and publish the data to MQTT. If HA have MQTT discovery enabled, the sensors will be added automatically to HA.
 
 # ![bms image](https://sc01.alicdn.com/kf/H357b7272ba0344eabd0c33c20101d0c7N.jpg)
