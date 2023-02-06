@@ -1,18 +1,20 @@
-ARG BUILD_FROM
-FROM $BUILD_FROM
+FROM python:3
 
 ENV LANG C.UTF-8
 
 COPY requirements.txt /
 
-RUN apk add --no-cache python3 && \
+RUN apt update -y && \
+    apt install python3 -y && \
+    apt install jq -y && \
     python3 -m ensurepip && \
-    rm -r /usr/lib/python*/ensurepip && \
-    python3 -m pip install -r requirements.txt && \
-    rm -r /root/.cache
+    rm -r /usr/local/lib/python*/ensurepip && \
+    python3 -m pip install -r requirements.txt
 
 COPY monitor.py /
 COPY run.sh /
+COPY config.py /
+
 RUN chmod a+x /run.sh
 
 CMD [ "/run.sh" ]
