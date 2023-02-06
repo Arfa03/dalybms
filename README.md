@@ -27,7 +27,7 @@ git clone https://github.com/Arfa03/dalybms
 
 Set your MQTT and battery data in config.py
 ```
-cd daly-bms-comms
+cd dalybms
 sudo nano config.py
 ```
 Then exit nano with ctrl+s and ctrl+x.
@@ -78,7 +78,7 @@ git clone https://github.com/Arfa03/dalybms
 
 Imposta i dati del tuo server MQTT e della batteria in config.py
 ```
-cd daly-bms-comms
+cd dalybms
 sudo nano config.py
 ```
 Dopodiché esci da nano con ctrl+s, poi ctrl+x
