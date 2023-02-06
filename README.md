@@ -12,7 +12,7 @@ The main code is in monitor.py, if you want to expand or change it.
 
 ## Install
 
-###### Using docker:
+#### Using docker:
 
 Clone this repo in your preferred directory:
 ```
@@ -30,7 +30,7 @@ Left the folder and build docker image:
 cd ..
 docker build dalybms
 ```
-Copy the image ID in the message *Succesfully built <id> *
+Copy the image ID in the message **Succesfully built >id<**
 Then run the image for checking if data flows, correct the USB port if needed
 ```
 docker run -it --device=/dev/ttyUSB0 --name bms-daly --restart unless-stopped <image-id>
@@ -43,13 +43,13 @@ docker container start bms-daly
 You're set!
 The sensors will automatically appear in HomeAssistant if you have enabled MQTT autodiscovery, otherwise you've to add it manually.
 
-###### Without using docker
+#### Without using docker
 Just execute monitor.py after configured parameter in config.py.
 
 Here the guide:
 > https://raspberrypi-guide.github.io/programming/run-script-on-boot
 
-## Energy and power
+#### Energy and power
 
 You can do this easily. For power in `W`, just create a template sensor and multiply `current * voltage`. https://www.home-assistant.io/integrations/template/
 
