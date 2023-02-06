@@ -43,6 +43,12 @@ docker container start bms-daly
 You're set!
 The sensors will automatically appear in HomeAssistant if you have enabled MQTT autodiscovery, otherwise you've to add it manually.
 
+###### Without using docker
+Just execute monitor.py after configured parameter in config.py.
+
+Here the guide:
+> https://raspberrypi-guide.github.io/programming/run-script-on-boot
+
 ## Energy and power
 
 You can do this easily. For power in `W`, just create a template sensor and multiply `current * voltage`. https://www.home-assistant.io/integrations/template/
