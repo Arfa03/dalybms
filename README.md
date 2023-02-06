@@ -10,6 +10,9 @@ Based on the protocol docs found here https://github.com/jblance/mpp-solar/blob/
 
 The main code is in monitor.py, if you want to expand or change it.
 
+Preferisci l'italiano?
+[lingua italiana](https://github.com/Arfa03/dalybms#italian-language)
+
 ## Install
 
 #### Using docker:
