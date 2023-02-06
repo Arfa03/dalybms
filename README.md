@@ -22,7 +22,7 @@ Preferisci l'italiano?
 
 Clone this repo in your preferred directory:
 ```
-git clone https://github.com/Arfa03/daly-bms-comms
+git clone https://github.com/Arfa03/dalybms
 ```
 
 Set your MQTT and battery data in config.py
@@ -73,7 +73,7 @@ Se la tua istanza di Home Assistant ha la funzione autodiscovery dei dispositivi
 
 Clona questa repo nella directory che preferisci
 ```
-git clone https://github.com/Arfa03/daly-bms-comms
+git clone https://github.com/Arfa03/dalybms
 ```
 
 Imposta i dati del tuo server MQTT e della batteria in config.py
