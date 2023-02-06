@@ -51,6 +51,10 @@ The sensors will automatically appear in HomeAssistant if you have enabled MQTT 
 
 #### Without using docker
 Just execute monitor.py after configured parameter in config.py.
+In dalybms folder:
+```
+python3 monitor.py
+```
 
 Here the guide for execute automatically on startup:
 > https://raspberrypi-guide.github.io/programming/run-script-on-boot
