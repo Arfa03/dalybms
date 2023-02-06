@@ -107,7 +107,7 @@ Recati nella cartella dalybms ed esegui il comando:
 ```
 python3 monitor.py
 ```
-Per far sì che si avii automaticamente all'avvio, qui trovi la guida:
+Per far sì che si avvii automaticamente all'avvio del sistema, qui trovi la guida:
 > https://raspberrypi-guide.github.io/programming/run-script-on-boot
 
 #### Energia e potenza
