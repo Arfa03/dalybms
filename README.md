@@ -2,6 +2,9 @@
 ## **Thanks to @mindFreeze for the great work!**
 Monitor a Daly Smart BMS connected through UART USB to raspberry and publish the data to MQTT. If HA have MQTT discovery enabled, the sensors will be added automatically to HA.
 
+>Preferisci l'italiano?
+>[lingua italiana](https://github.com/Arfa03/dalybms#italian-language)
+
 # ![bms image](https://sc01.alicdn.com/kf/H357b7272ba0344eabd0c33c20101d0c7N.jpg)
 
 Based on the protocol docs found here https://github.com/jblance/mpp-solar/blob/master/docs/protocols/DALY-Daly_RS485_UART_Protocol.pdf and the discussion here https://diysolarforum.com/threads/decoding-the-daly-smartbms-protocol.21898/
