@@ -16,8 +16,6 @@ The main code is in monitor.py, if you want to expand or change it.
 Preferisci l'italiano?
 [lingua italiana](https://github.com/Arfa03/dalybms#italian-language)
 
-## Note:
-The SOC Ah capacity is currently under development, the data displayed can be wrong.
 
 ## Install
 
