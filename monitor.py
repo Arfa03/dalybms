@@ -13,6 +13,8 @@ import os
 import paho.mqtt.client as mqtt
   
 
+network_problems = NETWORK_PROBLEMS
+pause_between_discovery = MQTT_DISCOVERY_WAIT
 
 print('Starting BMS monitor...')
 
@@ -31,6 +33,7 @@ STATUS_TOPIC = STATE_TOPIC + '_status'
 CELLS_TOPIC = STATE_TOPIC + '_balance'
 TEMP_TOPIC = STATE_TOPIC + '_temp'
 INFO_TOPIC = STATE_TOPIC + '_info'
+ALARM_TOPIC = STATE_TOPIC + '_alarm'
 
 deviceConf = '"device": {"manufacturer": "Dongfuan Daly Electronics", "name": "Smart BMS", "identifiers": ["' + devId + '"]}'
 
@@ -42,79 +45,96 @@ deviceConf = '"device": {"manufacturer": "Dongfuan Daly Electronics", "name": "S
 # battery percent
 socHaConf = '{"device_class": "battery", "name": "Percentuale Batteria", "state_topic": "' + STATE_TOPIC +'/state", "unit_of_measurement": "%", "value_template": "{{ value_json.percentuale}}", "unique_id": "' + devId + '_soc", ' + deviceConf + ', "json_attributes_topic": "' + STATUS_TOPIC + '/state"}' 
 client.publish(STATE_TOPIC +'_percent/config', socHaConf, 0, True)
-time.sleep(1)
+time.sleep(pause_between_discovery)
 
 # battery voltage
 voltageHaConf = '{"device_class": "voltage", "name": "Tensione Batteria", "state_topic": "' + STATE_TOPIC +'/state", "unit_of_measurement": "V", "value_template": "{{ value_json.tensione}}", "unique_id": "' + devId + '_voltage", ' + deviceConf + '}'
 client.publish(STATE_TOPIC + '_volt/config', voltageHaConf, 0, True)
-time.sleep(1)
+time.sleep(pause_between_discovery)
 
 # battery current
 currentHaConf = '{"device_class": "current", "name": "Corrente Batteria", "state_topic": "' + STATE_TOPIC +'/state", "unit_of_measurement": "A", "value_template": "{{ value_json.corrente}}", "unique_id": "' + devId + '_current", ' + deviceConf + '}' 
 client.publish(STATE_TOPIC + '_curr/config', currentHaConf, 0, True)
-time.sleep(1)
+time.sleep(pause_between_discovery)
 
 # BMS mode
 chargeHaConf = '{"name": "Status", "state_topic": "' + INFO_TOPIC +'/state", "value_template": "{{ value_json.mode}}", "unique_id": "' + devId + '_status", ' + deviceConf + '}' 
 client.publish(STATE_TOPIC + '_car/config', chargeHaConf, 0, True)
-time.sleep(1)
+time.sleep(pause_between_discovery)
 
 # battery SOC in AH
 modeHaConf = '{"device_class": "current", "name": "SOC Ah", "state_topic": "' + INFO_TOPIC +'/state", "unit_of_measurement": "Ah", "value_template": "{{ value_json.socAh}}", "unique_id": "' + devId + '_mode", ' + deviceConf + '}' 
 client.publish(STATE_TOPIC + '_mode/config', modeHaConf, 0, True)
-time.sleep(1)
+time.sleep(pause_between_discovery)
+
+# charging MOS status
+modeHaConf = '{"device_class": "power", "name": "Stato MOS carica", "state_topic": "' + INFO_TOPIC +'/state", "value_template": "{{ value_json.chMos}}", "unique_id": "' + devId + '_chMos", ' + deviceConf + '}' 
+client.publish(STATE_TOPIC + '_chMos/config', modeHaConf, 0, True)
+time.sleep(pause_between_discovery)
+
+# discharging MOS status
+modeHaConf = '{"device_class": "power", "name": "Stato MOS scarica", "state_topic": "' + INFO_TOPIC +'/state", "value_template": "{{ value_json.dischMos}}", "unique_id": "' + devId + '_dischMos", ' + deviceConf + '}' 
+client.publish(STATE_TOPIC + '_disCh/config', modeHaConf, 0, True)
+time.sleep(pause_between_discovery)
 
 # BMS cycles
 cyclesHaConf = '{"name": "Cicli", "state_topic": "' + STATUS_TOPIC +'/state", "value_template": "{{ value_json.cicli}}", "unique_id": "' + devId + '_cicli", ' + deviceConf + '}' 
 client.publish(STATE_TOPIC + '_cycles/config', cyclesHaConf, 0, True)
-time.sleep(1)
+time.sleep(pause_between_discovery)
 
 # difference from highest and lower cells in V
 cellsHaConf = '{"device_class": "voltage", "name": "Differenza Celle", "state_topic": "' + CELLS_TOPIC + '/state", "unit_of_measurement": "V", "value_template": "{{ value_json.differenza}}", "json_attributes_topic": "' + CELLS_TOPIC + '/state", "unique_id": "' + devId + '_balance", ' + deviceConf + '}' 
 client.publish(CELLS_TOPIC + '/config', cellsHaConf, 0, True)
-time.sleep(1)
+time.sleep(pause_between_discovery)
 
 # cells voltages
 for cells in range(CELLS_IN_SERIES):
     cCell = str(cells+1)
     cellHaConf = '{"device_class": "voltage", "name": "Cella ' + cCell + '", "state_topic": "' + CELLS_TOPIC +'/state", "unit_of_measurement": "V", "value_template": "{{ value_json.cella' + cCell +'}}", "unique_id": "' + devId + '_cell-' + cCell +'-voltage", ' + deviceConf + '}'
     client.publish(CELLS_TOPIC + '_cella1'+cCell+'v/config', cellHaConf, 0, True)
-    time.sleep(1)
+    time.sleep(pause_between_discovery)
 
 
 # cell with the lower voltage
 cellMinHaConf = '{"device_class": "voltage", "name": "Cella Minima", "state_topic": "' + CELLS_TOPIC +'/state", "unit_of_measurement": "V", "value_template": "{{ value_json.minima}}", "unique_id": "' + devId + '_cell-min-value", ' + deviceConf + '}'
 client.publish(CELLS_TOPIC + '_cellMin/config', cellMinHaConf, 0, True)
-time.sleep(1)
+time.sleep(pause_between_discovery)
 
 # cell with the highest voltage
 cellMaxHaConf = '{"device_class": "voltage", "name": "Cella Massima", "state_topic": "' + CELLS_TOPIC +'/state", "unit_of_measurement": "V", "value_template": "{{ value_json.massima}}", "unique_id": "' + devId + '_cell-max-value", ' + deviceConf + '}'
 client.publish(CELLS_TOPIC + '_cellMax/config', cellMaxHaConf, 0, True)
-time.sleep(1)
+time.sleep(pause_between_discovery)
 
 # number of the lower voltage cell
 cellNoMinHaConf = '{"name": "Numero cella minima", "state_topic": "' + CELLS_TOPIC +'/state", "value_template": "{{ value_json.cella_minima}}", "unique_id": "' + devId + '_cell-no-min", ' + deviceConf + '}'
 client.publish(CELLS_TOPIC + '_cellNoMin/config', cellNoMinHaConf, 0, True)
-time.sleep(1)
+time.sleep(pause_between_discovery)
 
 # number of the highest voltage cell
 cellNoMaxHaConf = '{"name": "Numero cella massima", "state_topic": "' + CELLS_TOPIC +'/state", "value_template": "{{ value_json.cella_massima}}", "unique_id": "' + devId + '_cell-no-max", ' + deviceConf + '}'
 client.publish(CELLS_TOPIC + '_cellNoMax/config', cellNoMaxHaConf, 0, True)
-time.sleep(1)
+time.sleep(pause_between_discovery)
 
 # average voltage of the cells
 cellAvgHaConf = '{"device_class": "voltage", "name": "Media celle", "state_topic": "' + CELLS_TOPIC +'/state", "unit_of_measurement": "V", "value_template": "{{ value_json.media}}", "unique_id": "' + devId + '_cell-avg", ' + deviceConf + '}'
 client.publish(CELLS_TOPIC + '_cellAvg/config', cellAvgHaConf, 0, True)
-time.sleep(1)
+time.sleep(pause_between_discovery)
 
 # sum of all the cells
 cellSumHaConf = '{"device_class": "voltage", "name": "Somma celle", "state_topic": "' + CELLS_TOPIC +'/state", "unit_of_measurement": "V", "value_template": "{{ value_json.somma}}", "unique_id": "' + devId + '_cell-sum", ' + deviceConf + '}'
 client.publish(CELLS_TOPIC + '_cellSum/config', cellSumHaConf, 0, True)
-time.sleep(1)
+time.sleep(pause_between_discovery)
 
 # battery temperature
 tempHaConf = '{"device_class": "temperature", "name": "Temperatura Batteria", "state_topic": "' + TEMP_TOPIC + '/state", "unit_of_measurement": "°C", "value_template": "{{ value_json.valore}}", "unique_id": "' + devId + '_temp", ' + deviceConf + ', "json_attributes_topic": "' + TEMP_TOPIC + '/state"}'
 client.publish(TEMP_TOPIC + 'temp/config', tempHaConf, 0, True)
+time.sleep(pause_between_discovery)
+
+# alarm voltage
+tempHaConf = '{"name": "Allarme tensione", "state_topic": "' + ALARM_TOPIC + '/state", "value_template": "{{ value_json.voltageAlarm}}", "unique_id": "' + devId + '_voltAlarm", ' + deviceConf + '}'
+client.publish(ALARM_TOPIC + '_voltageAlarm/config', tempHaConf, 0, True)
+time.sleep(pause_between_discovery)
+
 
 
 def cmd(command):
@@ -207,7 +227,10 @@ def get_battery_info():
         return
     buffer = res[0]
     charger_mode = int.from_bytes(buffer[4:5], byteorder='big', signed=False)
-    socAh = (int.from_bytes(buffer[10:17], byteorder='big', signed=False) / 100000) *2
+    socAh = (int.from_bytes(buffer[8:12], byteorder='big', signed=False) / 1000)
+    chMos = (int.from_bytes(buffer[5:6], byteorder='big', signed=False))
+    dischMos = (int.from_bytes(buffer[6:7], byteorder='big', signed=False))
+
     if charger_mode == 1:
         charger = '"In carica"'
     elif charger_mode == 2:
@@ -216,9 +239,11 @@ def get_battery_info():
         charger = '"Standby"'
     json = '{'
     json += '"mode":' + str(charger) + ','
-    json += '"socAh":' + str(round(socAh, 1))
+    json += '"socAh":' + str(round(socAh, 1)) + ','
+    json += '"chMos":' + str(chMos) + ','
+    json += '"dischMos":' + str(dischMos)
     json += '}'
-    print(json)
+    # print(json)
     publish(INFO_TOPIC +'/state', json)
 
 def get_battery_temp():
@@ -240,12 +265,46 @@ def get_battery_temp():
     json += '}'
     publish(TEMP_TOPIC +'/state', json)
 
+def get_battery_alarm():
+    res = cmd(b'\xa5\x40\x98\x08\x00\x00\x00\x00\x00\x00\x00\x00\x85')
+    if len(res) < 1:
+        print('Empty response get_battery_alarm')
+        return
+    buffer = res[0]
+    al1 = ord(buffer[4:5])
+    al1 = bin(al1)[2:].rjust(8, '0')
+    alarmMessage = ''
+    if al1[0] == '1': alarmMessage = ''
+    if al1[1] == '1': alarmMessage = ''
+    if al1[2] == '1': alarmMessage = ''
+    if al1[3] == '1': alarmMessage = ''
+    if al1[4] == '1': alarmMessage = '"Allarme 1 tensione alta"'
+    if al1[5] == '1': alarmMessage = '"Allarme 2 tensione alta"'
+    if al1[6] == '1': alarmMessage = '"Allarme 1 tensione bassa"'
+    if al1[7] == '1': alarmMessage = '"Allarme 2 tensione bassa"'
+    if alarmMessage == '': alarmMessage = '"Nessun allarme tensione"'
+
+    json = '{'
+    json += '"voltageAlarm":' + str(alarmMessage)
+    json += '}'
+    publish(ALARM_TOPIC +'/state', json)
+
+i=0
 while True:
+    if i == 10 and network_problems == True:   
+        try:
+            client.reconnect()
+            publish(STATE_TOPIC +'/mqtt_info', 'mqtt reconnected')
+            i=0
+        except Exception as e:
+            print(e)
+    if network_problems: i = i+1
     get_battery_state()
     get_cell_balance(CELLS_IN_SERIES)
     get_battery_status()
     get_battery_info()
     get_battery_temp()
+    get_battery_alarm()
     time.sleep(1)
     
 ser.close()
