@@ -25,6 +25,7 @@ client = mqtt.Client(client_id=MQTT_CLIENT_ID)
 client.username_pw_set(MQTT_USER, MQTT_PASS)
 client.connect(MQTT_SERVER)
 
+
 # config mqtt
 devId = DEVICE_ID
 BASE_TOPIC = MQTT_DISCOVERY_PREFIX + '/sensor/'
@@ -48,7 +49,7 @@ client.publish(STATE_TOPIC +'_percent/config', socHaConf, 0, True)
 time.sleep(pause_between_discovery)
 
 # battery voltage
-voltageHaConf = '{"device_class": "voltage", "name": "Tensione Batteria", "state_topic": "' + STATE_TOPIC +'/state", "unit_of_measurement": "V", "value_template": "{{ value_json.tensione}}", "unique_id": "' + devId + '_voltage", ' + deviceConf + '}'
+voltageHaConf = '{"device_class": "voltage", "name": "Tensione Batteria", "force_update": "true", "state_topic": "' + STATE_TOPIC +'/state", "unit_of_measurement": "V", "value_template": "{{ value_json.tensione}}", "unique_id": "' + devId + '_voltage", ' + deviceConf + '}'
 client.publish(STATE_TOPIC + '_volt/config', voltageHaConf, 0, True)
 time.sleep(pause_between_discovery)
 
@@ -293,7 +294,9 @@ i=0
 while True:
     if i == 10 and network_problems == True:   
         try:
-            client.reconnect()
+            client = mqtt.Client(client_id=MQTT_CLIENT_ID)
+            client.username_pw_set(MQTT_USER, MQTT_PASS)
+            client.connect(MQTT_SERVER)
             publish(STATE_TOPIC +'/mqtt_info', 'mqtt reconnected')
             i=0
         except Exception as e:
