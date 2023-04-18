@@ -175,7 +175,7 @@ def get_cell_balance(cell_count):
     for i in range(cell_count):
         cells[i] = cells[i]/1000
         sum += cells[i]
-        json += '"cella' + str(i+1) + '":' + str(cells[i]) + ','
+    json += '"cella' + str(i+1) + '":' + str(cells[i]) + ','
     json += '"somma":' + str(round(sum, 1)) + ','
     json += '"media":' + str(round(sum/16, 3)) + ','
     min_v = min(cells)
@@ -186,7 +186,8 @@ def get_cell_balance(cell_count):
     json += '"cella_massima":' + str(cells.index(max_v) + 1) + ','
     json += '"differenza":' + str(round(max_v - min_v, 3))
     json += '}'
-    publish(CELLS_TOPIC + '/state', json)
+    if sum > 60: {print('Value too high: probably a read error. Skipping cells voltage.')}
+    else: publish(CELLS_TOPIC + '/state', json)
 
 def get_battery_state():
     res = cmd(b'\xa5\x40\x90\x08\x00\x00\x00\x00\x00\x00\x00\x00\x7d')
@@ -203,7 +204,12 @@ def get_battery_state():
     json += '"percentuale":' + str(soc)
     json += '}'
     print(json)
-    publish(STATE_TOPIC +'/state', json)
+    if voltage > 60: {print('Value too high: probably a read error. Skipping voltage.')}
+    elif voltage < 40: {print('Value too low: probably a read error. Skipping voltage.')}
+    elif current > 110: {print('Value too high: probably a read error. Skipping current.')}
+    elif current < -110: {print('Value too low: probably a read error. Skipping current.')}
+    elif soc > 101: {print('Value too high: probably a read error. Skipping soc.')}
+    else: publish(STATE_TOPIC +'/state', json)
 
 def get_battery_status():
     res = cmd(b'\xa5\x40\x94\x08\x00\x00\x00\x00\x00\x00\x00\x00\x81')
@@ -219,7 +225,9 @@ def get_battery_status():
     json += '"temperatura":' + str(temp) + ','
     json += '"cicli":' + str(cycles)
     json += '}'
-    publish(STATUS_TOPIC +'/state', json)
+    if batt_string > 16: {print('Value too high: probably a read error. Skipping string.')}
+    elif temp > 60: {print('Value too high: probably a read error. Skipping temp.')}
+    else: publish(STATUS_TOPIC +'/state', json)
 
 def get_battery_info():
     res = cmd(b'\xa5\x40\x93\x08\x00\x00\x00\x00\x00\x00\x00\x00\x80')
@@ -245,7 +253,10 @@ def get_battery_info():
     json += '"dischMos":' + str(dischMos)
     json += '}'
     # print(json)
-    publish(INFO_TOPIC +'/state', json)
+    if socAh > 400: {print('Value too high: probably a read error. Skipping socAh.')}
+    elif chMos > 1: {print('Value too high: probably a read error. Skipping chMos.')}
+    elif dischMos > 1: {print('Value too high: probably a read error. Skipping dischMos.')}
+    else: publish(INFO_TOPIC +'/state', json)
 
 def get_battery_temp():
     res = cmd(b'\xa5\x40\x92\x08\x00\x00\x00\x00\x00\x00\x00\x00\x7f')
@@ -264,7 +275,8 @@ def get_battery_temp():
     json += '"temperatura_minima":' + str(minTemp) + ','
     json += '"cella_temperatura_minima":' + str(minTempCell)
     json += '}'
-    publish(TEMP_TOPIC +'/state', json)
+    if ((maxTemp + minTemp) / 2) > 60: {print('Value too high: probably a read error. Skipping average temp.')}
+    else: publish(TEMP_TOPIC +'/state', json)
 
 def get_battery_alarm():
     res = cmd(b'\xa5\x40\x98\x08\x00\x00\x00\x00\x00\x00\x00\x00\x85')
