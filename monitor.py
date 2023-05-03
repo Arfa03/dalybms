@@ -175,7 +175,7 @@ def get_cell_balance(cell_count):
     for i in range(cell_count):
         cells[i] = cells[i]/1000
         sum += cells[i]
-    json += '"cella' + str(i+1) + '":' + str(cells[i]) + ','
+        json += '"cella' + str(i+1) + '":' + str(cells[i]) + ','
     json += '"somma":' + str(round(sum, 1)) + ','
     json += '"media":' + str(round(sum/16, 3)) + ','
     min_v = min(cells)
