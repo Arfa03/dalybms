@@ -351,7 +351,7 @@ while True:
 
     client.on_connect = on_connect
     client.on_message = on_message
-    client.loop_start()
+    client.loop(.1)
 
     ######################################################
 
