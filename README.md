@@ -66,6 +66,12 @@ You can do this easily. For power in `W`, just create a template sensor and mult
 
 Then to get `kWh` for energy you can create an integration sensor from the power sensor. https://www.home-assistant.io/integrations/integration/
 
+#### New function: Set SoC Percent
+
+For those who are hurted by the inaccurate SoC reading of the Daly, being strange with the pass of time!
+Now you can set an automation in Home Assistant, which send an MQTT message with the SoC value in the topic "homeassistant/command/dalybms/soc" with an integer number, eg. 80, and the Daly SoC will be immediately set to this value! 
+You can for example set up an automation which when the battery voltage reach 55v in charging mode, will be send once an MQTT message with the value 90, so, at every full charge you're set with you're correct SoC.
+
 
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////
 ## Italian Language:
@@ -123,3 +129,9 @@ https://www.home-assistant.io/integrations/template/
 
 Per ottenere l'energia in `kWh` invece, puoi creare un sensore integrativo.
 https://www.home-assistant.io/integrations/integration/
+
+#### Nuova funzione: Impostazione manuale percentuale SoC
+
+Per coloro che sono infastiditi dalla lettura imprecisa del SoC del Daly, che peggiora con il passare del tempo!
+Ora puoi impostare un'automazione in Home Assistant, che invia un messaggio MQTT con il valore SoC nel topic "homeassistant/command/dalybms/soc" con un numero intero, ad es. 80, e il SoC verrà subito impostato su questo valore!
+Puoi ad esempio impostare un'automazione che quando la tensione della batteria raggiunge i 55v in modalità di ricarica, invierà una volta un messaggio MQTT con il valore 90, quindi, ad ogni carica completa sei allineato con il tuo SoC corretto.

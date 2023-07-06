@@ -21,9 +21,13 @@ print('Starting BMS monitor...')
 ser = serial.Serial(DEVICE, 9600, timeout=1)  # open serial port
 
 # connect to MQTT server
+
+
 client = mqtt.Client(client_id=MQTT_CLIENT_ID)
+
 client.username_pw_set(MQTT_USER, MQTT_PASS)
 client.connect(MQTT_SERVER)
+
 
 
 # config mqtt
@@ -302,8 +306,25 @@ def get_battery_alarm():
     json += '}'
     publish(ALARM_TOPIC +'/state', json)
 
+def setSocValue(soc):
+    if isinstance(soc, int) and 0 <= soc <= 1000:
+        print('Setting SoC value at: ' + str(soc / 10))
+        base = b'\xa5\x40\x21\x08\x16\x0c\x0d\x15\x1d\x27'
+        socValue = soc.to_bytes(2, 'big')
+        completed = base + socValue
+        checksum = ((sum(completed)) & 0xFF).to_bytes(1, 'big')
+        command = completed + checksum
+        res = cmd(command)
+        print("SoC set to " + str(soc / 10))
+    else:
+        print("Invalid input")
+
 i=0
+
 while True:
+    # Set function topic:
+    socTopic = "homeassistant/command/dalybms/soc"
+
     if i == 10 and network_problems == True:   
         try:
             client = mqtt.Client(client_id=MQTT_CLIENT_ID)
@@ -314,6 +335,26 @@ while True:
         except Exception as e:
             print(e)
     if network_problems: i = i+1
+
+    def on_connect(client, userdata, flags, rc):
+        client.subscribe([(socTopic, 0)])
+
+    def on_message(client, userdata, msg):
+        time.sleep(3)
+        try:
+            if(msg.topic == socTopic):
+                value = (int(msg.payload.decode()))*10
+                setSocValue(value)
+        except Exception as e:
+            print('Invalid input.')
+        
+
+    client.on_connect = on_connect
+    client.on_message = on_message
+    client.loop_start()
+
+    ######################################################
+
     get_battery_state()
     get_cell_balance(CELLS_IN_SERIES)
     get_battery_status()
